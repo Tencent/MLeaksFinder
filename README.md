@@ -18,14 +18,17 @@ View-ViewController stack: (
     MyTableViewCell
 )'
 ```
+
 ## Mute Assertion
-If your class is designed as singleton or for some reason objects of your class should not be dealloc, override -assertNotDealloc in your class by giving it an empty implementation.
+If your class is designed as singleton or for some reason objects of your class should not be dealloced, override -assertNotDealloc in your class by giving it an empty implementation.
 ```
 - (void)assertNotDealloc {
     
 }
 ```
+
 ## Find Leaks in Other Objects
+MLeaksFinder finds leaks in UIView and UIViewController objects by default. However, you can extend it to find leaks in the whole object graph rooted at a UIViewController object.
 ```
 - (BOOL)willDealloc {
     if (![super willDealloc]) {

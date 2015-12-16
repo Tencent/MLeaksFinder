@@ -18,10 +18,11 @@
         return NO;
     }
     
-    NSArray *viewStack = [self currentViewStack];
+    NSArray *viewStack = [self viewStack];
     
     for (UIViewController *viewController in self.viewControllers) {
-        [viewController setPreviousViewStack:viewStack];
+        NSString *className = NSStringFromClass([viewController class]);
+        [viewController setViewStack:[viewStack arrayByAddingObject:className]];
         [viewController willDealloc];
     }
     

@@ -55,14 +55,14 @@
         return NO;
     }
     
-    NSArray *viewStack = [self currentViewStack];
+    NSArray *viewStack = [self viewStack];
     
     for (UIViewController *viewController in self.viewControllers) {
-        [viewController setPreviousViewStack:viewStack];
-        [viewController willDealloc];
-        
         NSString *className = NSStringFromClass([viewController class]);
         viewStack = [viewStack arrayByAddingObject:className];
+        
+        [viewController setViewStack:viewStack];
+        [viewController willDealloc];
     }
     
     return YES;

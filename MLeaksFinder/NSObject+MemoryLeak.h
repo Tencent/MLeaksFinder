@@ -8,13 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
+#define MLCheck(TARGET) [self willReleaseObject:(TARGET) relationship:@#TARGET];
+
 @interface NSObject (MemoryLeak)
 
 - (BOOL)willDealloc;
-- (void)assertNotDealloc;
+- (void)willReleaseObject:(id)object relationship:(NSString *)relationship;
 
-- (NSArray *)currentViewStack;
-- (void)setPreviousViewStack:(NSArray *)viewStack;
+- (NSArray *)viewStack;
+- (void)setViewStack:(NSArray *)viewStack;
 
 #ifdef DEBUG
 

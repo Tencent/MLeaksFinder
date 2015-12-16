@@ -26,23 +26,34 @@ static const void *const kViewStackKey = &kViewStackKey;
     return YES;
 }
 
+- (void)willReleaseObject:(id)object relationship:(NSString *)relationship {
+    if ([relationship hasPrefix:@"self"]) {
+        relationship = [relationship stringByReplacingCharactersInRange:NSMakeRange(0, 4) withString:@""];
+    }
+    NSString *className = NSStringFromClass([object class]);
+    className = [NSString stringWithFormat:@"%@(%@), ", relationship, className];
+    
+    NSArray *viewStack = [self viewStack];
+    [object setViewStack:[viewStack arrayByAddingObject:className]];
+    [object willDealloc];
+}
+
 - (void)assertNotDealloc {
     NSString *className = NSStringFromClass([self class]);
-    NSAssert(NO, @"Possibly Memory Leak.\nIn case that %@ should not be dealloced, override -assertNotDealloc in %@ by giving it an empty implementation.\nView-ViewController stack: %@", className, className, [self currentViewStack]);
+    NSAssert(NO, @"Possibly Memory Leak.\nIn case that %@ should not be dealloced, override -willDealloc in %@ by returning NO.\nView-ViewController stack: %@", className, className, [self viewStack]);
 }
 
-- (NSArray *)currentViewStack {
-    NSString *className = NSStringFromClass([self class]);
+- (NSArray *)viewStack {
     NSArray *viewStack = objc_getAssociatedObject(self, kViewStackKey);
     if (viewStack) {
-        viewStack = [viewStack arrayByAddingObject:className];
-    } else {
-        viewStack = @[ className ];
+        return viewStack;
     }
-    return viewStack;
+    
+    NSString *className = NSStringFromClass([self class]);
+    return @[ className ];
 }
 
-- (void)setPreviousViewStack:(NSArray *)viewStack {
+- (void)setViewStack:(NSArray *)viewStack {
     objc_setAssociatedObject(self, kViewStackKey, viewStack, OBJC_ASSOCIATION_COPY);
 }
 

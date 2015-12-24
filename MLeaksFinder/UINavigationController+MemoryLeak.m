@@ -8,8 +8,11 @@
 
 #import "UINavigationController+MemoryLeak.h"
 #import "NSObject+MemoryLeak.h"
+#import <objc/runtime.h>
 
 #ifdef DEBUG
+
+extern const void *const kHasBeenPoppedKey;
 
 @implementation UINavigationController (MemoryLeak)
 
@@ -25,7 +28,7 @@
 - (UIViewController *)swizzled_popViewControllerAnimated:(BOOL)animated {
     UIViewController *poppedViewController = [self swizzled_popViewControllerAnimated:animated];
     
-    [poppedViewController willDealloc];
+    objc_setAssociatedObject(poppedViewController, kHasBeenPoppedKey, @(YES), OBJC_ASSOCIATION_RETAIN);
     
     return poppedViewController;
 }

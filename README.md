@@ -5,6 +5,7 @@ MLeaksFinder helps you find memory leaks in your iOS apps at develop time. It ca
 - Download MLeaksFinder
 - Add MLeaksFinder as a subproject
 - Add MLeaksFinder to your Target Dependencies and Link Binary With Libraries
+- Click your app's target, then "Build Settings", search for "Other Linker Flags", add '-ObjC'
 
 # Usage
 MLeaksFinder can automatically find leaks in UIView and UIViewController objects. When leaks happening, it will hit assertion and print the leaked object in its View-ViewController stack.

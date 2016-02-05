@@ -12,8 +12,6 @@
 
 #ifdef DEBUG
 
-extern const void *const kHasBeenPoppedKey;
-
 @implementation UINavigationController (MemoryLeak)
 
 + (void)load {
@@ -28,6 +26,14 @@ extern const void *const kHasBeenPoppedKey;
 - (UIViewController *)swizzled_popViewControllerAnimated:(BOOL)animated {
     UIViewController *poppedViewController = [self swizzled_popViewControllerAnimated:animated];
     
+    // Detail VC in UISplitViewController is not dealloced until another detail VC is shown
+    if (self.splitViewController &&
+        self.splitViewController.viewControllers.firstObject == self) {
+        return poppedViewController;
+    }
+    
+    // VC is not dealloced until disappear when popped using a left-edge swipe gesture
+    extern const void *const kHasBeenPoppedKey;
     objc_setAssociatedObject(poppedViewController, kHasBeenPoppedKey, @(YES), OBJC_ASSOCIATION_RETAIN);
     
     return poppedViewController;

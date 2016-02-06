@@ -62,6 +62,7 @@ static const void *const kViewStackKey = &kViewStackKey;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         whiteList = [NSSet setWithObjects:
+                     @"UIFieldEditor", // UIAlertControllerTextField
                      @"_UIAlertControllerActionView",
                      nil];
     });

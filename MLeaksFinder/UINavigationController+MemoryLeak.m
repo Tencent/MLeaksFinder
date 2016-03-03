@@ -12,15 +12,30 @@
 
 #ifdef DEBUG
 
+static const void *const kPoppedDetailVCKey = &kPoppedDetailVCKey;
+
 @implementation UINavigationController (MemoryLeak)
 
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
+        [self swizzleSEL:@selector(pushViewController:animated:) withSEL:@selector(swizzled_pushViewController:animated:)];
         [self swizzleSEL:@selector(popViewControllerAnimated:) withSEL:@selector(swizzled_popViewControllerAnimated:)];
         [self swizzleSEL:@selector(popToViewController:animated:) withSEL:@selector(swizzled_popToViewController:animated:)];
         [self swizzleSEL:@selector(popToRootViewControllerAnimated:) withSEL:@selector(swizzled_popToRootViewControllerAnimated:)];
     });
+}
+
+- (void)swizzled_pushViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    if (self.splitViewController) {
+        id detailViewController = objc_getAssociatedObject(self, kPoppedDetailVCKey);
+        if ([detailViewController isKindOfClass:[UIViewController class]]) {
+            [detailViewController willDealloc];
+            objc_setAssociatedObject(self, kPoppedDetailVCKey, nil, OBJC_ASSOCIATION_RETAIN);
+        }
+    }
+    
+    [self swizzled_pushViewController:viewController animated:animated];
 }
 
 - (UIViewController *)swizzled_popViewControllerAnimated:(BOOL)animated {
@@ -28,7 +43,9 @@
     
     // Detail VC in UISplitViewController is not dealloced until another detail VC is shown
     if (self.splitViewController &&
-        self.splitViewController.viewControllers.firstObject == self) {
+        self.splitViewController.viewControllers.firstObject == self &&
+        self.splitViewController == poppedViewController.splitViewController) {
+        objc_setAssociatedObject(self, kPoppedDetailVCKey, poppedViewController, OBJC_ASSOCIATION_RETAIN);
         return poppedViewController;
     }
     

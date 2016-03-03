@@ -59,6 +59,12 @@ const void *const kHasBeenPoppedKey = &kHasBeenPoppedKey;
     
     NSArray *viewStack = [self viewStack];
     
+    for (UIViewController *viewController in self.childViewControllers) {
+        NSString *className = NSStringFromClass([viewController class]);
+        [viewController setViewStack:[viewStack arrayByAddingObject:className]];
+        [viewController willDealloc];
+    }
+    
     UIViewController *presentedViewController = self.presentedViewController;
     if (presentedViewController) {
         NSString *className = NSStringFromClass([presentedViewController class]);

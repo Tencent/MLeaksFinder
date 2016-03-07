@@ -71,7 +71,7 @@ static const void *const kViewStackKey = &kViewStackKey;
     return whiteList;
 }
 
-#ifdef DEBUG
+#ifdef MLEAKFINDERENABLE
 
 + (void)swizzleSEL:(SEL)originalSEL withSEL:(SEL)swizzledSEL {
     Class class = [self class];

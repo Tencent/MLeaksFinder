@@ -7,3 +7,7 @@
 //
 
 #import "NSObject+MemoryLeak.h"
+
+#ifdef DEBUG
+#define MLEAKFINDERENABLE 1
+#endif

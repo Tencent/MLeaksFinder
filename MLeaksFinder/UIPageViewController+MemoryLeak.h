@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#ifdef MLEAKFINDERENABLE
+#ifdef DEBUG
 
 @interface UIPageViewController (MemoryLeak)
 

@@ -9,7 +9,7 @@
 #import "UISplitViewController+MemoryLeak.h"
 #import "NSObject+MemoryLeak.h"
 
-#ifdef MLEAKFINDERENABLE
+#ifdef DEBUG
 
 @implementation UISplitViewController (MemoryLeak)
 

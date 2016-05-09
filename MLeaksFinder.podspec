@@ -30,7 +30,7 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '6.0'
 
-  s.source_files = 'MLeaksFinder/Classes/**/*'
+  s.source_files = 'MLeaksFinder/**/*'
   
   # s.resource_bundles = {
   #   'MLeaksFinder' => ['MLeaksFinder/Assets/*.png']

@@ -9,6 +9,11 @@ MLeaksFinder helps you find memory leaks in your iOS apps at develop time. It ca
 
 Or you can simply copy the source files into your project.
 
+## Installation with CocoaPods
+```
+pod 'MLeaksFinder'
+```
+
 # Usage
 MLeaksFinder can automatically find leaks in UIView and UIViewController objects. When leaks happening, it will hit assertion and print the leaked object in its View-ViewController stack.
 ```

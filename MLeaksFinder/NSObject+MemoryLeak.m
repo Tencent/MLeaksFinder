@@ -8,14 +8,20 @@
 
 #import "NSObject+MemoryLeak.h"
 #import <objc/runtime.h>
+#import <UIKit/UIKit.h>
 
 static const void *const kViewStackKey = &kViewStackKey;
+const void *const kLatestSenderKey = &kLatestSenderKey;
 
 @implementation NSObject (MemoryLeak)
 
 - (BOOL)willDealloc {
     NSString *className = NSStringFromClass([self class]);
     if ([[NSObject classNamesInWhiteList] containsObject:className])
+        return NO;
+    
+    id sender = objc_getAssociatedObject([UIApplication sharedApplication], kLatestSenderKey);
+    if (sender == self)
         return NO;
     
     __weak id weakSelf = self;

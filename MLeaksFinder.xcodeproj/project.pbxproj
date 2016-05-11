@@ -16,6 +16,7 @@
 		B3ADE1861C1BD5CC00AA4F63 /* UIPageViewController+MemoryLeak.m in Sources */ = {isa = PBXBuildFile; fileRef = B3ADE1851C1BD5CC00AA4F63 /* UIPageViewController+MemoryLeak.m */; };
 		B3ADE1891C1BD6F000AA4F63 /* UITabBarController+MemoryLeak.m in Sources */ = {isa = PBXBuildFile; fileRef = B3ADE1881C1BD6F000AA4F63 /* UITabBarController+MemoryLeak.m */; };
 		B3ADE18C1C1BD74700AA4F63 /* UISplitViewController+MemoryLeak.m in Sources */ = {isa = PBXBuildFile; fileRef = B3ADE18B1C1BD74700AA4F63 /* UISplitViewController+MemoryLeak.m */; };
+		B3C512C51CE3368B0032C2C8 /* UIApplication+MemoryLeak.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C512C41CE3368B0032C2C8 /* UIApplication+MemoryLeak.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -49,6 +50,8 @@
 		B3ADE1881C1BD6F000AA4F63 /* UITabBarController+MemoryLeak.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITabBarController+MemoryLeak.m"; sourceTree = "<group>"; };
 		B3ADE18A1C1BD74700AA4F63 /* UISplitViewController+MemoryLeak.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UISplitViewController+MemoryLeak.h"; sourceTree = "<group>"; };
 		B3ADE18B1C1BD74700AA4F63 /* UISplitViewController+MemoryLeak.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UISplitViewController+MemoryLeak.m"; sourceTree = "<group>"; };
+		B3C512C31CE3368B0032C2C8 /* UIApplication+MemoryLeak.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+MemoryLeak.h"; sourceTree = "<group>"; };
+		B3C512C41CE3368B0032C2C8 /* UIApplication+MemoryLeak.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+MemoryLeak.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +99,8 @@
 				B3ADE1791C1BD29600AA4F63 /* UIView+MemoryLeak.m */,
 				B3ADE17E1C1BD4B200AA4F63 /* UIViewController+MemoryLeak.h */,
 				B3ADE17F1C1BD4B200AA4F63 /* UIViewController+MemoryLeak.m */,
+				B3C512C31CE3368B0032C2C8 /* UIApplication+MemoryLeak.h */,
+				B3C512C41CE3368B0032C2C8 /* UIApplication+MemoryLeak.m */,
 			);
 			path = MLeaksFinder;
 			sourceTree = "<group>";
@@ -156,6 +161,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B3C512C51CE3368B0032C2C8 /* UIApplication+MemoryLeak.m in Sources */,
 				B3ADE17A1C1BD29600AA4F63 /* UIView+MemoryLeak.m in Sources */,
 				B3ADE1861C1BD5CC00AA4F63 /* UIPageViewController+MemoryLeak.m in Sources */,
 				B3ADE17D1C1BD2F000AA4F63 /* NSObject+MemoryLeak.m in Sources */,

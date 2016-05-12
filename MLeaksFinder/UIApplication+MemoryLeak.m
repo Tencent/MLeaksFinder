@@ -24,7 +24,7 @@ extern const void *const kLatestSenderKey;
 }
 
 - (BOOL)swizzled_sendAction:(SEL)action to:(id)target from:(id)sender forEvent:(UIEvent *)event {
-    objc_setAssociatedObject(self, kLatestSenderKey, sender, OBJC_ASSOCIATION_ASSIGN);
+    objc_setAssociatedObject(self, kLatestSenderKey, @((uintptr_t)sender), OBJC_ASSOCIATION_RETAIN);
     
     return [self swizzled_sendAction:action to:target from:sender forEvent:event];
 }

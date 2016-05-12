@@ -20,8 +20,8 @@ const void *const kLatestSenderKey = &kLatestSenderKey;
     if ([[NSObject classNamesInWhiteList] containsObject:className])
         return NO;
     
-    id sender = objc_getAssociatedObject([UIApplication sharedApplication], kLatestSenderKey);
-    if (sender == self)
+    NSNumber *senderPtr = objc_getAssociatedObject([UIApplication sharedApplication], kLatestSenderKey);
+    if ([senderPtr isEqualToNumber:@((uintptr_t)self)])
         return NO;
     
     __weak id weakSelf = self;

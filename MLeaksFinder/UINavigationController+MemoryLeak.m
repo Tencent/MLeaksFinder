@@ -41,6 +41,11 @@ static const void *const kPoppedDetailVCKey = &kPoppedDetailVCKey;
 - (UIViewController *)swizzled_popViewControllerAnimated:(BOOL)animated {
     UIViewController *poppedViewController = [self swizzled_popViewControllerAnimated:animated];
     
+    // Navigation VC's rootViewController is the last VC in Navigation VC's viewControllers
+    if (!poppedViewController) {
+        return nil;
+    }
+    
     // Detail VC in UISplitViewController is not dealloced until another detail VC is shown
     if (self.splitViewController &&
         self.splitViewController.viewControllers.firstObject == self &&

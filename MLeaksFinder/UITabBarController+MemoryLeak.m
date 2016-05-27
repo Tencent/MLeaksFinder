@@ -9,7 +9,7 @@
 #import "UITabBarController+MemoryLeak.h"
 #import "NSObject+MemoryLeak.h"
 
-#ifdef DEBUG
+#ifdef MLENABLE
 
 @implementation UITabBarController (MemoryLeak)
 

@@ -10,7 +10,7 @@
 #import "NSObject+MemoryLeak.h"
 #import <objc/runtime.h>
 
-#ifdef DEBUG
+#ifdef MLENABLE
 
 static const void *const kPoppedDetailVCKey = &kPoppedDetailVCKey;
 

@@ -9,7 +9,7 @@
 #import "UIView+MemoryLeak.h"
 #import "NSObject+MemoryLeak.h"
 
-#ifdef DEBUG
+#ifdef MLENABLE
 
 @implementation UIView (MemoryLeak)
 

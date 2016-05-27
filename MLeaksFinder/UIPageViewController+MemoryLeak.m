@@ -9,7 +9,7 @@
 #import "UIPageViewController+MemoryLeak.h"
 #import "NSObject+MemoryLeak.h"
 
-#ifdef USE_MLEAKSFINDER
+#ifdef MLENABLE
 
 @implementation UIPageViewController (MemoryLeak)
 

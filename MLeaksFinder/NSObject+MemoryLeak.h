@@ -18,7 +18,7 @@
 - (NSArray *)viewStack;
 - (void)setViewStack:(NSArray *)viewStack;
 
-#ifdef USE_MLEAKSFINDER
+#ifdef MLENABLE
 
 + (void)swizzleSEL:(SEL)originalSEL withSEL:(SEL)swizzledSEL;
 

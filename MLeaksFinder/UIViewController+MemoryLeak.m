@@ -10,7 +10,7 @@
 #import "NSObject+MemoryLeak.h"
 #import <objc/runtime.h>
 
-#ifdef USE_MLEAKSFINDER
+#ifdef MLENABLE
 
 const void *const kHasBeenPoppedKey = &kHasBeenPoppedKey;
 

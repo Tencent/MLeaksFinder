@@ -77,7 +77,7 @@ const void *const kLatestSenderKey = &kLatestSenderKey;
     return whiteList;
 }
 
-#ifdef USE_MLEAKSFINDER
+#ifdef MLENABLE
 
 + (void)swizzleSEL:(SEL)originalSEL withSEL:(SEL)swizzledSEL {
     Class class = [self class];

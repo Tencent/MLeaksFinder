@@ -10,7 +10,7 @@
 #import "NSObject+MemoryLeak.h"
 #import <objc/runtime.h>
 
-#ifdef USE_MLEAKSFINDER
+#ifdef MLENABLE
 
 extern const void *const kLatestSenderKey;
 

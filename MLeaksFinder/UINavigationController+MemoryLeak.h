@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MLeaksFinder.h"
 
-#ifdef DEBUG
+#if _INTERNAL_MLF_ENABLED
 
 @interface UINavigationController (MemoryLeak)
 

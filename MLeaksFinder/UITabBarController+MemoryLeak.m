@@ -9,7 +9,7 @@
 #import "UITabBarController+MemoryLeak.h"
 #import "NSObject+MemoryLeak.h"
 
-#ifdef DEBUG
+#if _INTERNAL_MLF_ENABLED
 
 @implementation UITabBarController (MemoryLeak)
 

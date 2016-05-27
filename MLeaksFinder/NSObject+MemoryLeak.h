@@ -18,10 +18,6 @@
 - (NSArray *)viewStack;
 - (void)setViewStack:(NSArray *)viewStack;
 
-#ifdef DEBUG
-
 + (void)swizzleSEL:(SEL)originalSEL withSEL:(SEL)swizzledSEL;
-
-#endif
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "NSObject+MemoryLeak.h"
+#import "MLeaksFinder.h"
 #import <objc/runtime.h>
 #import <UIKit/UIKit.h>
 
@@ -77,9 +78,8 @@ const void *const kLatestSenderKey = &kLatestSenderKey;
     return whiteList;
 }
 
-#ifdef DEBUG
-
 + (void)swizzleSEL:(SEL)originalSEL withSEL:(SEL)swizzledSEL {
+#if _INTERNAL_MLF_ENABLED
     Class class = [self class];
     
     Method originalMethod = class_getInstanceMethod(class, originalSEL);
@@ -99,8 +99,7 @@ const void *const kLatestSenderKey = &kLatestSenderKey;
     } else {
         method_exchangeImplementations(originalMethod, swizzledMethod);
     }
-}
-
 #endif
+}
 
 @end

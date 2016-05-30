@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "MLeaksFinder"
-  s.version          = "0.1.0"
+  s.version          = "0.1.1"
   s.summary          = "Find memory leaks in your iOS app at develop time."
 
 # This description is used to generate tags and improve search results.
@@ -36,7 +36,7 @@ Pod::Spec.new do |s|
   #   'MLeaksFinder' => ['MLeaksFinder/Assets/*.png']
   # }
 
-  s.public_header_files = 'MLeaksFinder/MLeaksFinder.h'
+  s.public_header_files = 'MLeaksFinder/MLeaksFinder.h', 'MLeaksFinder/NSObject+MemoryLeak.h'
   # s.frameworks = 'UIKit', 'MapKit'
   # s.dependency 'AFNetworking', '~> 2.3'
 end

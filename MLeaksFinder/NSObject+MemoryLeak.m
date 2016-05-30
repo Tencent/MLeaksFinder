@@ -72,6 +72,7 @@ const void *const kLatestSenderKey = &kLatestSenderKey;
     dispatch_once(&onceToken, ^{
         whiteList = [NSSet setWithObjects:
                      @"UIFieldEditor", // UIAlertControllerTextField
+                     @"UINavigationBar",
                      @"_UIAlertControllerActionView",
                      nil];
     });

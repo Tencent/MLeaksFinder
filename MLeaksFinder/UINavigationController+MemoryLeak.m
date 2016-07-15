@@ -41,7 +41,6 @@ static const void *const kPoppedDetailVCKey = &kPoppedDetailVCKey;
 - (UIViewController *)swizzled_popViewControllerAnimated:(BOOL)animated {
     UIViewController *poppedViewController = [self swizzled_popViewControllerAnimated:animated];
     
-    // Navigation VC's rootViewController is the last VC in Navigation VC's viewControllers
     if (!poppedViewController) {
         return nil;
     }
@@ -86,15 +85,7 @@ static const void *const kPoppedDetailVCKey = &kPoppedDetailVCKey;
         return NO;
     }
     
-    NSArray *viewStack = [self viewStack];
-    
-    for (UIViewController *viewController in self.viewControllers) {
-        NSString *className = NSStringFromClass([viewController class]);
-        viewStack = [viewStack arrayByAddingObject:className];
-        
-        [viewController setViewStack:viewStack];
-        [viewController willDealloc];
-    }
+    [self willReleaseChildren:self.viewControllers];
     
     return YES;
 }

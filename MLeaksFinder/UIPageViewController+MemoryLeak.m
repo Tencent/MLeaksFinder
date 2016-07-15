@@ -18,13 +18,7 @@
         return NO;
     }
     
-    NSArray *viewStack = [self viewStack];
-    
-    for (UIViewController *viewController in self.viewControllers) {
-        NSString *className = NSStringFromClass([viewController class]);
-        [viewController setViewStack:[viewStack arrayByAddingObject:className]];
-        [viewController willDealloc];
-    }
+    [self willReleaseChildren:self.viewControllers];
     
     return YES;
 }

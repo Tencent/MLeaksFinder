@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B3667E4E1D38ADF6002B55DE /* MLeakedObjectProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = B3667E4D1D38ADF6002B55DE /* MLeakedObjectProxy.m */; };
 		B367C8971C1C029500FDA5A9 /* NSObject+MemoryLeak.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B3ADE17B1C1BD2F000AA4F63 /* NSObject+MemoryLeak.h */; };
 		B3ADE1701C1BD1D600AA4F63 /* MLeaksFinder.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B3ADE16F1C1BD1D600AA4F63 /* MLeaksFinder.h */; };
 		B3ADE17A1C1BD29600AA4F63 /* UIView+MemoryLeak.m in Sources */ = {isa = PBXBuildFile; fileRef = B3ADE1791C1BD29600AA4F63 /* UIView+MemoryLeak.m */; };
@@ -34,6 +35,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		B3667E4C1D38ADF6002B55DE /* MLeakedObjectProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLeakedObjectProxy.h; sourceTree = "<group>"; };
+		B3667E4D1D38ADF6002B55DE /* MLeakedObjectProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLeakedObjectProxy.m; sourceTree = "<group>"; };
 		B3ADE16C1C1BD1D600AA4F63 /* libMLeaksFinder.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMLeaksFinder.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3ADE16F1C1BD1D600AA4F63 /* MLeaksFinder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MLeaksFinder.h; sourceTree = "<group>"; };
 		B3ADE1781C1BD29600AA4F63 /* UIView+MemoryLeak.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+MemoryLeak.h"; sourceTree = "<group>"; };
@@ -84,9 +87,13 @@
 		B3ADE16E1C1BD1D600AA4F63 /* MLeaksFinder */ = {
 			isa = PBXGroup;
 			children = (
+				B3667E4C1D38ADF6002B55DE /* MLeakedObjectProxy.h */,
+				B3667E4D1D38ADF6002B55DE /* MLeakedObjectProxy.m */,
 				B3ADE16F1C1BD1D600AA4F63 /* MLeaksFinder.h */,
 				B3ADE17B1C1BD2F000AA4F63 /* NSObject+MemoryLeak.h */,
 				B3ADE17C1C1BD2F000AA4F63 /* NSObject+MemoryLeak.m */,
+				B3C512C31CE3368B0032C2C8 /* UIApplication+MemoryLeak.h */,
+				B3C512C41CE3368B0032C2C8 /* UIApplication+MemoryLeak.m */,
 				B3ADE1811C1BD54B00AA4F63 /* UINavigationController+MemoryLeak.h */,
 				B3ADE1821C1BD54B00AA4F63 /* UINavigationController+MemoryLeak.m */,
 				B3ADE1841C1BD5CC00AA4F63 /* UIPageViewController+MemoryLeak.h */,
@@ -99,8 +106,6 @@
 				B3ADE1791C1BD29600AA4F63 /* UIView+MemoryLeak.m */,
 				B3ADE17E1C1BD4B200AA4F63 /* UIViewController+MemoryLeak.h */,
 				B3ADE17F1C1BD4B200AA4F63 /* UIViewController+MemoryLeak.m */,
-				B3C512C31CE3368B0032C2C8 /* UIApplication+MemoryLeak.h */,
-				B3C512C41CE3368B0032C2C8 /* UIApplication+MemoryLeak.m */,
 			);
 			path = MLeaksFinder;
 			sourceTree = "<group>";
@@ -164,6 +169,7 @@
 				B3C512C51CE3368B0032C2C8 /* UIApplication+MemoryLeak.m in Sources */,
 				B3ADE17A1C1BD29600AA4F63 /* UIView+MemoryLeak.m in Sources */,
 				B3ADE1861C1BD5CC00AA4F63 /* UIPageViewController+MemoryLeak.m in Sources */,
+				B3667E4E1D38ADF6002B55DE /* MLeakedObjectProxy.m in Sources */,
 				B3ADE17D1C1BD2F000AA4F63 /* NSObject+MemoryLeak.m in Sources */,
 				B3ADE18C1C1BD74700AA4F63 /* UISplitViewController+MemoryLeak.m in Sources */,
 				B3ADE1801C1BD4B200AA4F63 /* UIViewController+MemoryLeak.m in Sources */,

@@ -57,24 +57,9 @@ const void *const kHasBeenPoppedKey = &kHasBeenPoppedKey;
         return NO;
     }
     
-    NSArray *viewStack = [self viewStack];
-    
-    for (UIViewController *viewController in self.childViewControllers) {
-        NSString *className = NSStringFromClass([viewController class]);
-        [viewController setViewStack:[viewStack arrayByAddingObject:className]];
-        [viewController willDealloc];
-    }
-    
-    UIViewController *presentedViewController = self.presentedViewController;
-    if (presentedViewController) {
-        NSString *className = NSStringFromClass([presentedViewController class]);
-        [presentedViewController setViewStack:[viewStack arrayByAddingObject:className]];
-        [presentedViewController willDealloc];
-    }
-    
-    NSString *className = NSStringFromClass([self.view class]);
-    [self.view setViewStack:[viewStack arrayByAddingObject:className]];
-    [self.view willDealloc];
+    [self willReleaseChildren:self.childViewControllers];
+    [self willReleaseChild:self.presentedViewController];
+    [self willReleaseChild:self.view];
     
     return YES;
 }

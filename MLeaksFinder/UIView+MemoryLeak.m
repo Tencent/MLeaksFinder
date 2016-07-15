@@ -18,13 +18,7 @@
         return NO;
     }
     
-    NSArray *viewStack = [self viewStack];
-    
-    for (UIView *view in self.subviews) {
-        NSString *className = NSStringFromClass([view class]);
-        [view setViewStack:[viewStack arrayByAddingObject:className]];
-        [view willDealloc];
-    }
+    [self willReleaseChildren:self.subviews];
     
     return YES;
 }

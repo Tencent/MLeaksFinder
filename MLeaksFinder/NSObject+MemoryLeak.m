@@ -7,11 +7,13 @@
 //
 
 #import "NSObject+MemoryLeak.h"
+#import "MLeakedObjectProxy.h"
 #import "MLeaksFinder.h"
 #import <objc/runtime.h>
 #import <UIKit/UIKit.h>
 
 static const void *const kViewStackKey = &kViewStackKey;
+static const void *const kParentPtrsKey = &kParentPtrsKey;
 const void *const kLatestSenderKey = &kLatestSenderKey;
 
 @implementation NSObject (MemoryLeak)
@@ -27,10 +29,29 @@ const void *const kLatestSenderKey = &kLatestSenderKey;
     
     __weak id weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [weakSelf assertNotDealloc];
+        __strong id strongSelf = weakSelf;
+        [strongSelf assertNotDealloc];
     });
     
     return YES;
+}
+
+- (void)assertNotDealloc {
+    if ([MLeakedObjectProxy isAnyObjectLeakedAtPtrs:[self parentPtrs]]) {
+        return;
+    }
+    [MLeakedObjectProxy addLeakedObject:self];
+    
+    NSString *className = NSStringFromClass([self class]);
+    NSString *message = [NSString stringWithFormat:@"Possibly Memory Leak.\nIn case that %@ should not be dealloced, override -willDealloc in %@ by returning NO.\nView-ViewController stack: %@", className, className, [self viewStack]];
+    NSLog(@"%@", message);
+    
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Memory Leak"
+                                                        message:[NSString stringWithFormat:@"%@", [self viewStack]]
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+    [alertView show];
 }
 
 - (void)willReleaseObject:(id)object relationship:(NSString *)relationship {
@@ -40,16 +61,28 @@ const void *const kLatestSenderKey = &kLatestSenderKey;
     NSString *className = NSStringFromClass([object class]);
     className = [NSString stringWithFormat:@"%@(%@), ", relationship, className];
     
-    NSArray *viewStack = [self viewStack];
-    [object setViewStack:[viewStack arrayByAddingObject:className]];
+    [object setViewStack:[[self viewStack] arrayByAddingObject:className]];
+    [object setParentPtrs:[[self parentPtrs] setByAddingObject:@((uintptr_t)self)]];
     [object willDealloc];
 }
 
-- (void)assertNotDealloc {
-    NSString *className = NSStringFromClass([self class]);
-    NSString *message = [NSString stringWithFormat:@"Possibly Memory Leak.\nIn case that %@ should not be dealloced, override -willDealloc in %@ by returning NO.\nView-ViewController stack: %@", className, className, [self viewStack]];
-    NSLog(@"%@", message);
-    NSAssert(NO, message);
+- (void)willReleaseChild:(id)child {
+    if (!child) {
+        return;
+    }
+    
+    [self willReleaseChildren:@[ child ]];
+}
+
+- (void)willReleaseChildren:(NSArray *)children {
+    NSArray *viewStack = [self viewStack];
+    NSSet *parentPtrs = [[self parentPtrs] setByAddingObject:@((uintptr_t)self)];
+    for (id child in children) {
+        NSString *className = NSStringFromClass([child class]);
+        [child setViewStack:[viewStack arrayByAddingObject:className]];
+        [child setParentPtrs:parentPtrs];
+        [child willDealloc];
+    }
 }
 
 - (NSArray *)viewStack {
@@ -64,6 +97,18 @@ const void *const kLatestSenderKey = &kLatestSenderKey;
 
 - (void)setViewStack:(NSArray *)viewStack {
     objc_setAssociatedObject(self, kViewStackKey, viewStack, OBJC_ASSOCIATION_COPY);
+}
+
+- (NSSet *)parentPtrs {
+    NSSet *parentPtrs = objc_getAssociatedObject(self, kParentPtrsKey);
+    if (!parentPtrs) {
+        parentPtrs = [[NSSet alloc] init];
+    }
+    return parentPtrs;
+}
+
+- (void)setParentPtrs:(NSSet *)parentPtrs {
+    objc_setAssociatedObject(self, kParentPtrsKey, parentPtrs, OBJC_ASSOCIATION_RETAIN);
 }
 
 + (NSSet *)classNamesInWhiteList {

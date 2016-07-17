@@ -9,6 +9,7 @@
 #import "NSObject+MemoryLeak.h"
 #import "MLeakedObjectProxy.h"
 #import "MLeaksFinder.h"
+#import "MLeaksMessenger.h"
 #import <objc/runtime.h>
 #import <UIKit/UIKit.h>
 
@@ -28,7 +29,7 @@ const void *const kLatestSenderKey = &kLatestSenderKey;
         return NO;
     
     __weak id weakSelf = self;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         __strong id strongSelf = weakSelf;
         [strongSelf assertNotDealloc];
     });
@@ -43,15 +44,10 @@ const void *const kLatestSenderKey = &kLatestSenderKey;
     [MLeakedObjectProxy addLeakedObject:self];
     
     NSString *className = NSStringFromClass([self class]);
-    NSString *message = [NSString stringWithFormat:@"Possibly Memory Leak.\nIn case that %@ should not be dealloced, override -willDealloc in %@ by returning NO.\nView-ViewController stack: %@", className, className, [self viewStack]];
-    NSLog(@"%@", message);
+    NSLog(@"Possibly Memory Leak.\nIn case that %@ should not be dealloced, override -willDealloc in %@ by returning NO.\nView-ViewController stack: %@", className, className, [self viewStack]);
     
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Memory Leak"
-                                                        message:[NSString stringWithFormat:@"%@", [self viewStack]]
-                                                       delegate:nil
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-    [alertView show];
+    [MLeaksMessenger alertWithTitle:@"Memory Leak"
+                            message:[NSString stringWithFormat:@"%@", [self viewStack]]];
 }
 
 - (void)willReleaseObject:(id)object relationship:(NSString *)relationship {
@@ -62,7 +58,7 @@ const void *const kLatestSenderKey = &kLatestSenderKey;
     className = [NSString stringWithFormat:@"%@(%@), ", relationship, className];
     
     [object setViewStack:[[self viewStack] arrayByAddingObject:className]];
-    [object setParentPtrs:[[self parentPtrs] setByAddingObject:@((uintptr_t)self)]];
+    [object setParentPtrs:[[self parentPtrs] setByAddingObject:@((uintptr_t)object)]];
     [object willDealloc];
 }
 
@@ -76,11 +72,11 @@ const void *const kLatestSenderKey = &kLatestSenderKey;
 
 - (void)willReleaseChildren:(NSArray *)children {
     NSArray *viewStack = [self viewStack];
-    NSSet *parentPtrs = [[self parentPtrs] setByAddingObject:@((uintptr_t)self)];
+    NSSet *parentPtrs = [self parentPtrs];
     for (id child in children) {
         NSString *className = NSStringFromClass([child class]);
         [child setViewStack:[viewStack arrayByAddingObject:className]];
-        [child setParentPtrs:parentPtrs];
+        [child setParentPtrs:[parentPtrs setByAddingObject:@((uintptr_t)child)]];
         [child willDealloc];
     }
 }
@@ -102,7 +98,7 @@ const void *const kLatestSenderKey = &kLatestSenderKey;
 - (NSSet *)parentPtrs {
     NSSet *parentPtrs = objc_getAssociatedObject(self, kParentPtrsKey);
     if (!parentPtrs) {
-        parentPtrs = [[NSSet alloc] init];
+        parentPtrs = [[NSSet alloc] initWithObjects:@((uintptr_t)self), nil];
     }
     return parentPtrs;
 }

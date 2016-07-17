@@ -7,6 +7,7 @@
 //
 
 #import "MLeakedObjectProxy.h"
+#import "MLeaksMessenger.h"
 #import "NSObject+MemoryLeak.h"
 #import <objc/runtime.h>
 #import <UIKit/UIKit.h>
@@ -53,13 +54,8 @@ static NSMutableSet *leakedObjectPtrs;
     NSArray *viewStack = _viewStack;
     dispatch_async(dispatch_get_main_queue(), ^{
         [leakedObjectPtrs removeObject:objectPtr];
-        
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Object Deallocated"
-                                                            message:[NSString stringWithFormat:@"%@", viewStack]
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-        [alertView show];
+        [MLeaksMessenger alertWithTitle:@"Object Deallocated"
+                                message:[NSString stringWithFormat:@"%@", viewStack]];
     });
     
     NSLog(@"Object deallocated.\nView-ViewController stack: %@", viewStack);

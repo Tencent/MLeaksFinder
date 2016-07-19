@@ -13,7 +13,7 @@
 #import <objc/runtime.h>
 #import <UIKit/UIKit.h>
 
-#if _INTERNAL_RCD_ENABLED
+#if _INTERNAL_MLF_RC_ENABLED
 #import <FBRetainCycleDetector/FBRetainCycleDetector.h>
 #endif
 
@@ -57,7 +57,7 @@ static NSMutableSet *leakedObjectPtrs;
     
     [leakedObjectPtrs addObject:proxy.objectPtr];
     
-#if _INTERNAL_RCD_ENABLED
+#if _INTERNAL_MLF_RC_ENABLED
     [MLeaksMessenger alertWithTitle:@"Memory Leak"
                             message:[NSString stringWithFormat:@"%@", proxy.viewStack]
                            delegate:proxy
@@ -90,7 +90,7 @@ static NSMutableSet *leakedObjectPtrs;
         return;
     }
     
-#if _INTERNAL_RCD_ENABLED
+#if _INTERNAL_MLF_RC_ENABLED
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         FBRetainCycleDetector *detector = [FBRetainCycleDetector new];
         [detector addCandidate:self.object];
@@ -104,7 +104,7 @@ static NSMutableSet *leakedObjectPtrs;
                     NSArray *shiftedRetainCycle = [self shiftArray:retainCycle toIndex:index];
                     
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        [MLeaksMessenger alertWithTitle:@"Memory Leak"
+                        [MLeaksMessenger alertWithTitle:@"Retain Cycle"
                                                 message:[NSString stringWithFormat:@"%@", shiftedRetainCycle]];
                     });
                     hasFound = YES;
@@ -116,6 +116,12 @@ static NSMutableSet *leakedObjectPtrs;
             if (hasFound) {
                 break;
             }
+        }
+        if (!hasFound) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MLeaksMessenger alertWithTitle:@"Retain Cycle"
+                                        message:@"Fail to find a retain cycle"];
+            });
         }
     });
 #endif

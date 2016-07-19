@@ -12,7 +12,7 @@
 #import <objc/runtime.h>
 #import <UIKit/UIKit.h>
 
-#if _INTERNAL_RCD_ENABLED
+#if _INTERNAL_MLF_RC_ENABLED
 #import <FBRetainCycleDetector/FBRetainCycleDetector.h>
 #endif
 
@@ -123,7 +123,7 @@ const void *const kLatestSenderKey = &kLatestSenderKey;
 + (void)swizzleSEL:(SEL)originalSEL withSEL:(SEL)swizzledSEL {
 #if _INTERNAL_MLF_ENABLED
     
-#if _INTERNAL_RCD_ENABLED
+#if _INTERNAL_MLF_RC_ENABLED
     // Just find a place to set up FBRetainCycleDetector.
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{

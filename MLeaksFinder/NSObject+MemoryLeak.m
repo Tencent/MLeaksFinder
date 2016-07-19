@@ -9,9 +9,12 @@
 #import "NSObject+MemoryLeak.h"
 #import "MLeakedObjectProxy.h"
 #import "MLeaksFinder.h"
-#import "MLeaksMessenger.h"
 #import <objc/runtime.h>
 #import <UIKit/UIKit.h>
+
+#if _INTERNAL_RCD_ENABLED
+#import <FBRetainCycleDetector/FBRetainCycleDetector.h>
+#endif
 
 static const void *const kViewStackKey = &kViewStackKey;
 static const void *const kParentPtrsKey = &kParentPtrsKey;
@@ -45,9 +48,6 @@ const void *const kLatestSenderKey = &kLatestSenderKey;
     
     NSString *className = NSStringFromClass([self class]);
     NSLog(@"Possibly Memory Leak.\nIn case that %@ should not be dealloced, override -willDealloc in %@ by returning NO.\nView-ViewController stack: %@", className, className, [self viewStack]);
-    
-    [MLeaksMessenger alertWithTitle:@"Memory Leak"
-                            message:[NSString stringWithFormat:@"%@", [self viewStack]]];
 }
 
 - (void)willReleaseObject:(id)object relationship:(NSString *)relationship {
@@ -92,7 +92,7 @@ const void *const kLatestSenderKey = &kLatestSenderKey;
 }
 
 - (void)setViewStack:(NSArray *)viewStack {
-    objc_setAssociatedObject(self, kViewStackKey, viewStack, OBJC_ASSOCIATION_COPY);
+    objc_setAssociatedObject(self, kViewStackKey, viewStack, OBJC_ASSOCIATION_RETAIN);
 }
 
 - (NSSet *)parentPtrs {
@@ -122,6 +122,17 @@ const void *const kLatestSenderKey = &kLatestSenderKey;
 
 + (void)swizzleSEL:(SEL)originalSEL withSEL:(SEL)swizzledSEL {
 #if _INTERNAL_MLF_ENABLED
+    
+#if _INTERNAL_RCD_ENABLED
+    // Just find a place to set up FBRetainCycleDetector.
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [FBAssociationManager hook];
+        });
+    });
+#endif
+    
     Class class = [self class];
     
     Method originalMethod = class_getInstanceMethod(class, originalSEL);

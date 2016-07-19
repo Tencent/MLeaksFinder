@@ -7,21 +7,29 @@
 //
 
 #import "MLeaksMessenger.h"
-#import <UIKit/UIKit.h>
 
 static __weak UIAlertView *alertView;
 
 @implementation MLeaksMessenger
 
 + (void)alertWithTitle:(NSString *)title message:(NSString *)message {
+    [self alertWithTitle:title message:message delegate:nil additionalButtonTitle:nil];
+}
+
++ (void)alertWithTitle:(NSString *)title
+               message:(NSString *)message
+              delegate:(id<UIAlertViewDelegate>)delegate
+ additionalButtonTitle:(NSString *)additionalButtonTitle {
     [alertView dismissWithClickedButtonIndex:0 animated:NO];
     UIAlertView *alertViewTemp = [[UIAlertView alloc] initWithTitle:title
                                                             message:message
-                                                           delegate:nil
+                                                           delegate:delegate
                                                   cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
+                                                  otherButtonTitles:additionalButtonTitle, nil];
     [alertViewTemp show];
     alertView = alertViewTemp;
+    
+    NSLog(@"%@: %@", title, message);
 }
 
 @end

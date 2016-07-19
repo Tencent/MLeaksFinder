@@ -19,6 +19,7 @@
 		B3ADE1891C1BD6F000AA4F63 /* UITabBarController+MemoryLeak.m in Sources */ = {isa = PBXBuildFile; fileRef = B3ADE1881C1BD6F000AA4F63 /* UITabBarController+MemoryLeak.m */; };
 		B3ADE18C1C1BD74700AA4F63 /* UISplitViewController+MemoryLeak.m in Sources */ = {isa = PBXBuildFile; fileRef = B3ADE18B1C1BD74700AA4F63 /* UISplitViewController+MemoryLeak.m */; };
 		B3C512C51CE3368B0032C2C8 /* UIApplication+MemoryLeak.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C512C41CE3368B0032C2C8 /* UIApplication+MemoryLeak.m */; };
+		FE6CAD555020A33B697B5FDE /* libPods-MLeaksFinder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C69FD6BA6E3CCAC5168D790 /* libPods-MLeaksFinder.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -36,6 +37,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5E297F00748C1FFA737EEFB0 /* Pods-MLeaksFinder.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MLeaksFinder.release.xcconfig"; path = "Pods/Target Support Files/Pods-MLeaksFinder/Pods-MLeaksFinder.release.xcconfig"; sourceTree = "<group>"; };
+		6C69FD6BA6E3CCAC5168D790 /* libPods-MLeaksFinder.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MLeaksFinder.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		90EF182415984ED6E908B442 /* Pods-MLeaksFinder.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MLeaksFinder.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MLeaksFinder/Pods-MLeaksFinder.debug.xcconfig"; sourceTree = "<group>"; };
 		B3667E4C1D38ADF6002B55DE /* MLeakedObjectProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLeakedObjectProxy.h; sourceTree = "<group>"; };
 		B3667E4D1D38ADF6002B55DE /* MLeakedObjectProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLeakedObjectProxy.m; sourceTree = "<group>"; };
 		B3667E701D3BA78E002B55DE /* MLeaksMessenger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLeaksMessenger.h; sourceTree = "<group>"; };
@@ -65,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE6CAD555020A33B697B5FDE /* libPods-MLeaksFinder.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -76,6 +81,8 @@
 			children = (
 				B3ADE16E1C1BD1D600AA4F63 /* MLeaksFinder */,
 				B3ADE16D1C1BD1D600AA4F63 /* Products */,
+				F2E3CE8BD1BB1CB88838AF63 /* Pods */,
+				E3247A573B2F7B1C26211F01 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -115,6 +122,23 @@
 			path = MLeaksFinder;
 			sourceTree = "<group>";
 		};
+		E3247A573B2F7B1C26211F01 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6C69FD6BA6E3CCAC5168D790 /* libPods-MLeaksFinder.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F2E3CE8BD1BB1CB88838AF63 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				90EF182415984ED6E908B442 /* Pods-MLeaksFinder.debug.xcconfig */,
+				5E297F00748C1FFA737EEFB0 /* Pods-MLeaksFinder.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -122,9 +146,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B3ADE1751C1BD1D600AA4F63 /* Build configuration list for PBXNativeTarget "MLeaksFinder" */;
 			buildPhases = (
+				1E51A1E3538164E48103EBFB /* 📦 Check Pods Manifest.lock */,
 				B3ADE1681C1BD1D600AA4F63 /* Sources */,
 				B3ADE1691C1BD1D600AA4F63 /* Frameworks */,
 				B3ADE16A1C1BD1D600AA4F63 /* CopyFiles */,
+				C5C5444B869098CC15440C05 /* 📦 Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -165,6 +191,39 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1E51A1E3538164E48103EBFB /* 📦 Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		C5C5444B869098CC15440C05 /* 📦 Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MLeaksFinder/Pods-MLeaksFinder-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		B3ADE1681C1BD1D600AA4F63 /* Sources */ = {
@@ -269,6 +328,7 @@
 		};
 		B3ADE1761C1BD1D600AA4F63 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 90EF182415984ED6E908B442 /* Pods-MLeaksFinder.debug.xcconfig */;
 			buildSettings = {
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -278,6 +338,7 @@
 		};
 		B3ADE1771C1BD1D600AA4F63 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5E297F00748C1FFA737EEFB0 /* Pods-MLeaksFinder.release.xcconfig */;
 			buildSettings = {
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";

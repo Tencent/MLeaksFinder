@@ -59,7 +59,10 @@ const void *const kHasBeenPoppedKey = &kHasBeenPoppedKey;
     
     [self willReleaseChildren:self.childViewControllers];
     [self willReleaseChild:self.presentedViewController];
-    [self willReleaseChild:self.view];
+    
+    if (self.isViewLoaded) {
+        [self willReleaseChild:self.view];
+    }
     
     return YES;
 }

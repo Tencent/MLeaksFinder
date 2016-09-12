@@ -115,6 +115,7 @@ const void *const kLatestSenderKey = &kLatestSenderKey;
                      @"UIFieldEditor", // UIAlertControllerTextField
                      @"UINavigationBar",
                      @"_UIAlertControllerActionView",
+                     @"_UIVisualEffectBackdropView",
                      nil];
     });
     return whiteList;

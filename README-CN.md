@@ -15,4 +15,4 @@
 
 **4) 如何关掉 MLeaksFinder？**
 
-* 把 MLeaksFinder.h 里的 `//#define MEMORY_LEAKS_FINDER_ENABLED 0` 找开。
+* 把 MLeaksFinder.h 里的 `//#define MEMORY_LEAKS_FINDER_ENABLED 0` 打开。

@@ -108,15 +108,21 @@ const void *const kLatestSenderKey = &kLatestSenderKey;
 }
 
 + (NSSet *)classNamesInWhiteList {
-    static NSSet *whiteList;
+    static NSMutableSet *whiteList;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        whiteList = [NSSet setWithObjects:
+        whiteList = [NSMutableSet setWithObjects:
                      @"UIFieldEditor", // UIAlertControllerTextField
                      @"UINavigationBar",
                      @"_UIAlertControllerActionView",
                      @"_UIVisualEffectBackdropView",
                      nil];
+        
+        // System's bug since iOS 10 and not fixed yet up to this ci.
+        NSString *systemVersion = [UIDevice currentDevice].systemVersion;
+        if ([systemVersion compare:@"10.0" options:NSNumericSearch] != NSOrderedAscending) {
+            [whiteList addObject:@"UISwitch"];
+        }
     });
     return whiteList;
 }

@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "MLeaksFinder"
-  s.version          = "0.2.0"
+  s.version          = "0.2.1"
   s.summary          = "Find memory leaks in your iOS app at develop time."
 
 # This description is used to generate tags and improve search results.

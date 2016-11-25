@@ -8,6 +8,7 @@ QQ group: 482121244
 ```
 pod 'MLeaksFinder'
 ```
+MLeaksFinder comes into effect after `pod install`, there is no need to add any code nor to import any header file.
 
 # Usage
 MLeaksFinder can automatically find leaks in UIView and UIViewController objects. When leaks happening, it will present an alert with the leaked object in its View-ViewController stack.

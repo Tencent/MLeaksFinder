@@ -23,6 +23,7 @@ static const void *const kPoppedDetailVCKey = &kPoppedDetailVCKey;
         [self swizzleSEL:@selector(popViewControllerAnimated:) withSEL:@selector(swizzled_popViewControllerAnimated:)];
         [self swizzleSEL:@selector(popToViewController:animated:) withSEL:@selector(swizzled_popToViewController:animated:)];
         [self swizzleSEL:@selector(popToRootViewControllerAnimated:) withSEL:@selector(swizzled_popToRootViewControllerAnimated:)];
+        [self swizzleSEL:@selector(setViewControllers:animated:) withSEL:@selector(swizzled_setViewControllers:animated:)];
     });
 }
 
@@ -78,6 +79,18 @@ static const void *const kPoppedDetailVCKey = &kPoppedDetailVCKey;
     }
     
     return poppedViewControllers;
+}
+
+- (void)swizzled_setViewControllers:(NSArray<UIViewController *> *)viewControllers animated:(BOOL)animated {
+    NSArray *prev = [self.viewControllers copy];
+    [self swizzled_setViewControllers:viewControllers animated:YES];
+    
+    NSSet *set = [NSSet setWithArray:viewControllers];
+    for (UIViewController *v in prev) {
+        if (![set containsObject:v]) {
+            [v willDealloc];
+        }
+    }
 }
 
 - (BOOL)willDealloc {

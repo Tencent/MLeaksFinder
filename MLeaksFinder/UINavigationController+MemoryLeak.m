@@ -83,7 +83,7 @@ static const void *const kPoppedDetailVCKey = &kPoppedDetailVCKey;
 
 - (void)swizzled_setViewControllers:(NSArray<UIViewController *> *)viewControllers animated:(BOOL)animated {
     NSArray *prev = [self.viewControllers copy];
-    [self swizzled_setViewControllers:viewControllers animated:YES];
+    [self swizzled_setViewControllers:viewControllers animated:animated];
     
     NSSet *set = [NSSet setWithArray:viewControllers];
     for (UIViewController *v in prev) {

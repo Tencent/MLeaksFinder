@@ -2,6 +2,7 @@
 **1) 引进 MLeaksFinder 后没生效？**
 
 * 先验证引进是否正确，在 UIViewController+MemoryLeak.m 的 `+ (void)load` 方法里加断点，看 app 启动时有没有进入。
+* 用 CocoaPods 安装时注意有没有 warnings。
 
 **2) 可以手动引进 MLeaksFinder 吗？**
 

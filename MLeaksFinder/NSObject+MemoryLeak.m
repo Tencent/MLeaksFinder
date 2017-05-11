@@ -127,9 +127,12 @@ const void *const kLatestSenderKey = &kLatestSenderKey;
     return whiteList;
 }
 
-+ (void)swizzleSEL:(SEL)originalSEL withSEL:(SEL)swizzledSEL {
++ (void)mlfAspect_hookSelector:(SEL)selector
+                   withOptions:(AspectOptions)options
+                    usingBlock:(id)block
+                         error:(NSError *__autoreleasing *)error {
 #if _INTERNAL_MLF_ENABLED
-    
+
 #if _INTERNAL_MLF_RC_ENABLED
     // Just find a place to set up FBRetainCycleDetector.
     static dispatch_once_t onceToken;
@@ -139,26 +142,12 @@ const void *const kLatestSenderKey = &kLatestSenderKey;
         });
     });
 #endif
-    
-    Class class = [self class];
-    
-    Method originalMethod = class_getInstanceMethod(class, originalSEL);
-    Method swizzledMethod = class_getInstanceMethod(class, swizzledSEL);
-    
-    BOOL didAddMethod =
-    class_addMethod(class,
-                    originalSEL,
-                    method_getImplementation(swizzledMethod),
-                    method_getTypeEncoding(swizzledMethod));
-    
-    if (didAddMethod) {
-        class_replaceMethod(class,
-                            swizzledSEL,
-                            method_getImplementation(originalMethod),
-                            method_getTypeEncoding(originalMethod));
-    } else {
-        method_exchangeImplementations(originalMethod, swizzledMethod);
-    }
+
+    [NSObject aspect_hookSelector:selector
+                      withOptions:options
+                       usingBlock:block
+                            error:error];
+
 #endif
 }
 

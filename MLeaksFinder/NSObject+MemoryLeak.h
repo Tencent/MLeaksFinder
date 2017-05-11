@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Aspects.h"
 
 #define MLCheck(TARGET) [self willReleaseObject:(TARGET) relationship:@#TARGET];
 
@@ -20,6 +21,9 @@
 
 - (NSArray *)viewStack;
 
-+ (void)swizzleSEL:(SEL)originalSEL withSEL:(SEL)swizzledSEL;
++ (void)mlfAspect_hookSelector:(SEL)selector
+                   withOptions:(AspectOptions)options
+                    usingBlock:(id)block
+                         error:(NSError **)error;
 
 @end

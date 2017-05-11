@@ -9,6 +9,7 @@
 #import "UIViewController+MemoryLeak.h"
 #import "NSObject+MemoryLeak.h"
 #import <objc/runtime.h>
+#import "Aspects.h"
 
 #if _INTERNAL_MLF_ENABLED
 
@@ -17,39 +18,27 @@ const void *const kHasBeenPoppedKey = &kHasBeenPoppedKey;
 @implementation UIViewController (MemoryLeak)
 
 + (void)load {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [self swizzleSEL:@selector(viewDidDisappear:) withSEL:@selector(swizzled_viewDidDisappear:)];
-        [self swizzleSEL:@selector(viewWillAppear:) withSEL:@selector(swizzled_viewWillAppear:)];
-        [self swizzleSEL:@selector(dismissViewControllerAnimated:completion:) withSEL:@selector(swizzled_dismissViewControllerAnimated:completion:)];
-    });
-}
+    [UIViewController mlfAspect_hookSelector:@selector(viewWillAppear:)
+                              withOptions:AspectPositionAfter
+                               usingBlock:^{
+                                   objc_setAssociatedObject(self, kHasBeenPoppedKey, @(NO), OBJC_ASSOCIATION_RETAIN);
+                               }
+                                    error:nil];
 
-- (void)swizzled_viewDidDisappear:(BOOL)animated {
-    [self swizzled_viewDidDisappear:animated];
-    
-    if ([objc_getAssociatedObject(self, kHasBeenPoppedKey) boolValue]) {
-        [self willDealloc];
-    }
-}
+    [UIViewController mlfAspect_hookSelector:@selector(dismissViewControllerAnimated:completion:)
+                              withOptions:AspectPositionAfter
+                               usingBlock:^(id<AspectInfo> aspectInfo){
+                                   UIViewController *viewController = (UIViewController *)aspectInfo.instance;
+                                   UIViewController *dismissedViewController = viewController.presentedViewController;
+                                   if (!dismissedViewController && viewController.presentingViewController) {
+                                       dismissedViewController = viewController;
+                                   }
 
-- (void)swizzled_viewWillAppear:(BOOL)animated {
-    [self swizzled_viewWillAppear:animated];
-    
-    objc_setAssociatedObject(self, kHasBeenPoppedKey, @(NO), OBJC_ASSOCIATION_RETAIN);
-}
-
-- (void)swizzled_dismissViewControllerAnimated:(BOOL)flag completion:(void (^)(void))completion {
-    [self swizzled_dismissViewControllerAnimated:flag completion:completion];
-    
-    UIViewController *dismissedViewController = self.presentedViewController;
-    if (!dismissedViewController && self.presentingViewController) {
-        dismissedViewController = self;
-    }
-    
-    if (!dismissedViewController) return;
-    
-    [dismissedViewController willDealloc];
+                                   if (!dismissedViewController) return;
+                                   
+                                   [dismissedViewController willDealloc];
+                               }
+                                    error:nil];
 }
 
 - (BOOL)willDealloc {

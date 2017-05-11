@@ -9,6 +9,7 @@
 #import "UIApplication+MemoryLeak.h"
 #import "NSObject+MemoryLeak.h"
 #import <objc/runtime.h>
+#import "Aspects.h"
 
 #if _INTERNAL_MLF_ENABLED
 
@@ -17,16 +18,13 @@ extern const void *const kLatestSenderKey;
 @implementation UIApplication (MemoryLeak)
 
 + (void)load {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [self swizzleSEL:@selector(sendAction:to:from:forEvent:) withSEL:@selector(swizzled_sendAction:to:from:forEvent:)];
-    });
-}
-
-- (BOOL)swizzled_sendAction:(SEL)action to:(id)target from:(id)sender forEvent:(UIEvent *)event {
-    objc_setAssociatedObject(self, kLatestSenderKey, @((uintptr_t)sender), OBJC_ASSOCIATION_RETAIN);
-    
-    return [self swizzled_sendAction:action to:target from:sender forEvent:event];
+    [UIApplication mlfAspect_hookSelector:@selector(sendAction:to:from:forEvent:)
+                           withOptions:AspectPositionBefore
+                            usingBlock:^(id<AspectInfo> aspectInfo, SEL action, id target, id sender, UIEvent *event) {
+                                UIApplication *application = (UIApplication *)aspectInfo.instance;
+                                objc_setAssociatedObject(application, kLatestSenderKey, @((uintptr_t)sender), OBJC_ASSOCIATION_RETAIN);
+                            }
+                                 error:nil];
 }
 
 @end

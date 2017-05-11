@@ -7,5 +7,6 @@ target 'MLeaksFinder' do
 
   # Pods for MLeaksFinder
   pod 'FBRetainCycleDetector'
+  pod 'Aspects'
 
 end

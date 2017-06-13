@@ -20,6 +20,8 @@
 
 - (NSArray *)viewStack;
 
++ (void)addClassNamesToWhiteList:(NSArray *)classNames;
+
 + (void)swizzleSEL:(SEL)originalSEL withSEL:(SEL)swizzledSEL;
 
 @end

@@ -24,7 +24,7 @@ const void *const kLatestSenderKey = &kLatestSenderKey;
 
 - (BOOL)willDealloc {
     NSString *className = NSStringFromClass([self class]);
-    if ([[NSObject classNamesInWhiteList] containsObject:className])
+    if ([[NSObject classNamesWhiteList] containsObject:className])
         return NO;
     
     NSNumber *senderPtr = objc_getAssociatedObject([UIApplication sharedApplication], kLatestSenderKey);
@@ -107,26 +107,6 @@ const void *const kLatestSenderKey = &kLatestSenderKey;
     objc_setAssociatedObject(self, kParentPtrsKey, parentPtrs, OBJC_ASSOCIATION_RETAIN);
 }
 
-+ (NSSet *)classNamesInWhiteList {
-    static NSMutableSet *whiteList;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        whiteList = [NSMutableSet setWithObjects:
-                     @"UIFieldEditor", // UIAlertControllerTextField
-                     @"UINavigationBar",
-                     @"_UIAlertControllerActionView",
-                     @"_UIVisualEffectBackdropView",
-                     nil];
-        
-        // System's bug since iOS 10 and not fixed yet up to this ci.
-        NSString *systemVersion = [UIDevice currentDevice].systemVersion;
-        if ([systemVersion compare:@"10.0" options:NSNumericSearch] != NSOrderedAscending) {
-            [whiteList addObject:@"UISwitch"];
-        }
-    });
-    return whiteList;
-}
-
 + (void)swizzleSEL:(SEL)originalSEL withSEL:(SEL)swizzledSEL {
 #if _INTERNAL_MLF_ENABLED
     
@@ -160,6 +140,33 @@ const void *const kLatestSenderKey = &kLatestSenderKey;
         method_exchangeImplementations(originalMethod, swizzledMethod);
     }
 #endif
+}
+
++ (NSMutableSet *)classNamesWhiteList
+{
+    static NSMutableSet *whiteList = nil;
+    
+    if (!whiteList) {
+        whiteList = [NSMutableSet setWithObjects:
+                     @"UIFieldEditor", // UIAlertControllerTextField
+                     @"UINavigationBar",
+                     @"_UIAlertControllerActionView",
+                     @"_UIVisualEffectBackdropView",
+                     nil];
+        
+        // System's bug since iOS 10 and not fixed yet up to this ci.
+        NSString *systemVersion = [UIDevice currentDevice].systemVersion;
+        if ([systemVersion compare:@"10.0" options:NSNumericSearch] != NSOrderedAscending) {
+            [whiteList addObject:@"UISwitch"];
+        }
+    }
+    
+    return whiteList;
+}
+
++ (void)addClassNamesToWhiteList:(NSArray *)classNames
+{
+    [[self classNamesWhiteList] addObjectsFromArray:classNames];
 }
 
 @end

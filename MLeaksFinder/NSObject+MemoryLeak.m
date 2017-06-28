@@ -24,7 +24,7 @@ const void *const kLatestSenderKey = &kLatestSenderKey;
 
 - (BOOL)willDealloc {
     NSString *className = NSStringFromClass([self class]);
-    if ([[NSObject classNamesWhiteList] containsObject:className])
+    if ([[NSObject classNamesWhitelist] containsObject:className])
         return NO;
     
     NSNumber *senderPtr = objc_getAssociatedObject([UIApplication sharedApplication], kLatestSenderKey);
@@ -142,12 +142,12 @@ const void *const kLatestSenderKey = &kLatestSenderKey;
 #endif
 }
 
-+ (NSMutableSet *)classNamesWhiteList
++ (NSMutableSet *)classNamesWhitelist
 {
-    static NSMutableSet *whiteList = nil;
+    static NSMutableSet *whitelist = nil;
     
-    if (!whiteList) {
-        whiteList = [NSMutableSet setWithObjects:
+    if (!whitelist) {
+        whitelist = [NSMutableSet setWithObjects:
                      @"UIFieldEditor", // UIAlertControllerTextField
                      @"UINavigationBar",
                      @"_UIAlertControllerActionView",
@@ -157,16 +157,16 @@ const void *const kLatestSenderKey = &kLatestSenderKey;
         // System's bug since iOS 10 and not fixed yet up to this ci.
         NSString *systemVersion = [UIDevice currentDevice].systemVersion;
         if ([systemVersion compare:@"10.0" options:NSNumericSearch] != NSOrderedAscending) {
-            [whiteList addObject:@"UISwitch"];
+            [whitelist addObject:@"UISwitch"];
         }
     }
     
-    return whiteList;
+    return whitelist;
 }
 
-+ (void)addClassNamesToWhiteList:(NSArray *)classNames
++ (void)addClassNamesToWhitelist:(NSArray *)classNames
 {
-    [[self classNamesWhiteList] addObjectsFromArray:classNames];
+    [[self classNamesWhitelist] addObjectsFromArray:classNames];
 }
 
 @end

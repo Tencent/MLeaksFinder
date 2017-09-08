@@ -142,8 +142,7 @@ const void *const kLatestSenderKey = &kLatestSenderKey;
 #endif
 }
 
-+ (NSMutableSet *)classNamesWhitelist
-{
++ (NSMutableSet *)classNamesWhitelist {
     static NSMutableSet *whitelist = nil;
     
     if (!whitelist) {
@@ -164,8 +163,7 @@ const void *const kLatestSenderKey = &kLatestSenderKey;
     return whitelist;
 }
 
-+ (void)addClassNamesToWhitelist:(NSArray *)classNames
-{
++ (void)addClassNamesToWhitelist:(NSArray *)classNames {
     [[self classNamesWhitelist] addObjectsFromArray:classNames];
 }
 

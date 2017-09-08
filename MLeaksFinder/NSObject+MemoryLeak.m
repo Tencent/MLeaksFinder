@@ -107,6 +107,30 @@ const void *const kLatestSenderKey = &kLatestSenderKey;
     objc_setAssociatedObject(self, kParentPtrsKey, parentPtrs, OBJC_ASSOCIATION_RETAIN);
 }
 
++ (NSMutableSet *)classNamesWhitelist {
+    static NSMutableSet *whitelist = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        whitelist = [NSMutableSet setWithObjects:
+                     @"UIFieldEditor", // UIAlertControllerTextField
+                     @"UINavigationBar",
+                     @"_UIAlertControllerActionView",
+                     @"_UIVisualEffectBackdropView",
+                     nil];
+        
+        // System's bug since iOS 10 and not fixed yet up to this ci.
+        NSString *systemVersion = [UIDevice currentDevice].systemVersion;
+        if ([systemVersion compare:@"10.0" options:NSNumericSearch] != NSOrderedAscending) {
+            [whitelist addObject:@"UISwitch"];
+        }
+    });
+    return whitelist;
+}
+
++ (void)addClassNamesToWhitelist:(NSArray *)classNames {
+    [[self classNamesWhitelist] addObjectsFromArray:classNames];
+}
+
 + (void)swizzleSEL:(SEL)originalSEL withSEL:(SEL)swizzledSEL {
 #if _INTERNAL_MLF_ENABLED
     
@@ -140,31 +164,6 @@ const void *const kLatestSenderKey = &kLatestSenderKey;
         method_exchangeImplementations(originalMethod, swizzledMethod);
     }
 #endif
-}
-
-+ (NSMutableSet *)classNamesWhitelist {
-    static NSMutableSet *whitelist = nil;
-    
-    if (!whitelist) {
-        whitelist = [NSMutableSet setWithObjects:
-                     @"UIFieldEditor", // UIAlertControllerTextField
-                     @"UINavigationBar",
-                     @"_UIAlertControllerActionView",
-                     @"_UIVisualEffectBackdropView",
-                     nil];
-        
-        // System's bug since iOS 10 and not fixed yet up to this ci.
-        NSString *systemVersion = [UIDevice currentDevice].systemVersion;
-        if ([systemVersion compare:@"10.0" options:NSNumericSearch] != NSOrderedAscending) {
-            [whitelist addObject:@"UISwitch"];
-        }
-    }
-    
-    return whitelist;
-}
-
-+ (void)addClassNamesToWhitelist:(NSArray *)classNames {
-    [[self classNamesWhitelist] addObjectsFromArray:classNames];
 }
 
 @end

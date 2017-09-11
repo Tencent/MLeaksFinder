@@ -1,4 +1,4 @@
-[中文介绍](http://wereadteam.github.io/2016/07/20/MLeaksFinder2/) | [FAQ中文](https://github.com/Zepo/MLeaksFinder/blob/master/README-CN.md)
+[中文介绍](http://wereadteam.github.io/2016/07/20/MLeaksFinder2/) | [FAQ中文](https://github.com/Zepo/MLeaksFinder/blob/master/FAQ-CN.md)
 
 # MLeaksFinder
 MLeaksFinder helps you find memory leaks in your iOS apps at develop time. It can automatically find leaks in UIView and UIViewController objects, present an alert with the leaked object in its View-ViewController stack when leaks happening. ~~More over, it can try to find a retain cycle for the leaked object using [FBRetainCycleDetector](https://github.com/facebook/FBRetainCycleDetector/tree/master/FBRetainCycleDetector).~~ Besides finding leaks in UIView and UIViewController objects, developers can extend it to find leaks in other kinds of objects.

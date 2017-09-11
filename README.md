@@ -12,6 +12,8 @@ pod 'MLeaksFinder'
 ```
 MLeaksFinder comes into effect after `pod install`, there is no need to add any code nor to import any header file.
 
+*WARNING: FBRetainCycleDetector is removed from the podspec due to Facebook's BSD-plus-Patents license. If you want to use FBRetainCycleDetector to find retain cycle, add `pod 'FBRetainCycleDetector'` to your project's Podfile and turn the macro `MEMORY_LEAKS_FINDER_RETAIN_CYCLE_ENABLED` on in `MLeaksFinder.h`.*
+
 # Usage
 MLeaksFinder can automatically find leaks in UIView and UIViewController objects. When leaks happening, it will present an alert with the leaked object in its View-ViewController stack.
 ```

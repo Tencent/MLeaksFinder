@@ -25,13 +25,16 @@ static __weak UIAlertView *alertView;
               delegate:(id<UIAlertViewDelegate>)delegate
  additionalButtonTitle:(NSString *)additionalButtonTitle {
     [alertView dismissWithClickedButtonIndex:0 animated:NO];
-    UIAlertView *alertViewTemp = [[UIAlertView alloc] initWithTitle:title
-                                                            message:message
-                                                           delegate:delegate
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:additionalButtonTitle, nil];
-    [alertViewTemp show];
-    alertView = alertViewTemp;
+    UIAlertController * alertView = [UIAlertController
+                                           alertControllerWithTitle:title
+                                           message:message
+                                           preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+        //do something when click button
+    }];
+    [alertView addAction:okAction];
+    [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:alertView animated:YES completion:nil];
     
     NSLog(@"%@: %@", title, message);
 }

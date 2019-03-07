@@ -61,6 +61,7 @@ static const void *const kPoppedDetailVCKey = &kPoppedDetailVCKey;
     extern const void *const kHasBeenPoppedKey;
     objc_setAssociatedObject(poppedViewController, kHasBeenPoppedKey, @(YES), OBJC_ASSOCIATION_RETAIN);
     
+    [poppedViewController willDealloc];
     return poppedViewController;
 }
 

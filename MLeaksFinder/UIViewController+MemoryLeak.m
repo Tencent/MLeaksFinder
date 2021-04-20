@@ -53,7 +53,7 @@ const void *const kHasBeenPoppedKey = &kHasBeenPoppedKey;
     
     if (!dismissedViewController) return;
     
-    [dismissedViewController willDealloc];
+    objc_setAssociatedObject(self, kHasBeenPoppedKey, @(YES), OBJC_ASSOCIATION_RETAIN);
 }
 
 - (BOOL)willDealloc {

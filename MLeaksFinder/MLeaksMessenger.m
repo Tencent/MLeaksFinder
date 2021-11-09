@@ -12,8 +12,6 @@
 
 #import "MLeaksMessenger.h"
 
-static __weak UIAlertView *alertView;
-
 @implementation MLeaksMessenger
 
 + (void)alertWithTitle:(NSString *)title message:(NSString *)message {
@@ -24,16 +22,24 @@ static __weak UIAlertView *alertView;
                message:(NSString *)message
               delegate:(id<UIAlertViewDelegate>)delegate
  additionalButtonTitle:(NSString *)additionalButtonTitle {
-    [alertView dismissWithClickedButtonIndex:0 animated:NO];
-    UIAlertView *alertViewTemp = [[UIAlertView alloc] initWithTitle:title
-                                                            message:message
-                                                           delegate:delegate
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:additionalButtonTitle, nil];
-    [alertViewTemp show];
-    alertView = alertViewTemp;
+    UIAlertController* alertVC = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:(UIAlertControllerStyleAlert)];
+    UIAlertAction* additionalButtonAction = [UIAlertAction actionWithTitle:additionalButtonTitle ? additionalButtonTitle : @"OK" style:(UIAlertActionStyleDefault) handler:nil];
+
+    UIAlertAction* cancalAction = [UIAlertAction actionWithTitle:@"Cancel" style:(UIAlertActionStyleCancel) handler:nil];
+
+    [alertVC addAction:additionalButtonAction];
+    [alertVC addAction:cancalAction];
+
+    UIViewController* rootVC = [UIApplication sharedApplication].windows.firstObject.rootViewController;
     
-    NSLog(@"%@: %@", title, message);
+    UIViewController* topVC = rootVC;
+    while (topVC.presentedViewController) {
+        topVC = topVC.presentedViewController;
+    }
+    
+    [topVC presentViewController:alertVC animated:YES completion:nil];
+    NSLog(@"show alert %@: %@", title, message);
+
 }
 
 @end

@@ -22,19 +22,19 @@
                message:(NSString *)message
               delegate:(id<UIAlertViewDelegate>)delegate
  additionalButtonTitle:(NSString *)additionalButtonTitle {
-    
     UIAlertController* alertVC = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:(UIAlertControllerStyleAlert)];
     UIAlertAction* additionalButtonAction = [UIAlertAction actionWithTitle:additionalButtonTitle ? additionalButtonTitle : @"OK" style:(UIAlertActionStyleDefault) handler:nil];
-    
+
+    UIAlertAction* cancalAction = [UIAlertAction actionWithTitle:@"Cancel" style:(UIAlertActionStyleCancel) handler:nil];
+
     [alertVC addAction:additionalButtonAction];
+    [alertVC addAction:cancalAction];
 
     UIViewController* rootVC = [UIApplication sharedApplication].windows.firstObject.rootViewController;
     
-    UIViewController* topVC = rootVC.presentedViewController;
-    
-    if (topVC == nil)
-    {
-        topVC = [UIApplication sharedApplication].windows.firstObject.rootViewController;
+    UIViewController* topVC = rootVC;
+    while (topVC.presentedViewController) {
+        topVC = topVC.presentedViewController;
     }
     
     [topVC presentViewController:alertVC animated:YES completion:nil];

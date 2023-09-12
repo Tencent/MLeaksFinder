@@ -16,31 +16,13 @@
 
 #if _INTERNAL_MLF_ENABLED
 
-const void *const kHasBeenPoppedKey = &kHasBeenPoppedKey;
-
 @implementation UIViewController (MemoryLeak)
 
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self swizzleSEL:@selector(viewDidDisappear:) withSEL:@selector(swizzled_viewDidDisappear:)];
-        [self swizzleSEL:@selector(viewWillAppear:) withSEL:@selector(swizzled_viewWillAppear:)];
         [self swizzleSEL:@selector(dismissViewControllerAnimated:completion:) withSEL:@selector(swizzled_dismissViewControllerAnimated:completion:)];
     });
-}
-
-- (void)swizzled_viewDidDisappear:(BOOL)animated {
-    [self swizzled_viewDidDisappear:animated];
-    
-    if ([objc_getAssociatedObject(self, kHasBeenPoppedKey) boolValue]) {
-        [self willDealloc];
-    }
-}
-
-- (void)swizzled_viewWillAppear:(BOOL)animated {
-    [self swizzled_viewWillAppear:animated];
-    
-    objc_setAssociatedObject(self, kHasBeenPoppedKey, @(NO), OBJC_ASSOCIATION_RETAIN);
 }
 
 - (void)swizzled_dismissViewControllerAnimated:(BOOL)flag completion:(void (^)(void))completion {

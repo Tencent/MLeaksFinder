@@ -66,6 +66,7 @@ const void *const kHasBeenPoppedKey = &kHasBeenPoppedKey;
     
     if (self.isViewLoaded) {
         [self willReleaseChild:self.view];
+        [self willReleaseChild:self.navigationItem.titleView];
     }
     
     return YES;

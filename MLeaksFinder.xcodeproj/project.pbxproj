@@ -151,11 +151,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B3ADE1751C1BD1D600AA4F63 /* Build configuration list for PBXNativeTarget "MLeaksFinder" */;
 			buildPhases = (
+				9E0BBC368849AFF24D69A961 /* [CP] Check Pods Manifest.lock */,
 				1E51A1E3538164E48103EBFB /* 📦 Check Pods Manifest.lock */,
 				B3ADE1681C1BD1D600AA4F63 /* Sources */,
 				B3ADE1691C1BD1D600AA4F63 /* Frameworks */,
 				B3ADE16A1C1BD1D600AA4F63 /* CopyFiles */,
-				C5C5444B869098CC15440C05 /* 📦 Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -213,19 +213,26 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		C5C5444B869098CC15440C05 /* 📦 Copy Pods Resources */ = {
+		9E0BBC368849AFF24D69A961 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
+			inputFileListPaths = (
 			);
-			name = "📦 Copy Pods Resources";
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MLeaksFinder-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MLeaksFinder/Pods-MLeaksFinder-resources.sh\"\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */

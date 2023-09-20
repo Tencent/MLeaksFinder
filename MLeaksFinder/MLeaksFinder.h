@@ -27,3 +27,6 @@
 #elif COCOAPODS
 #define _INTERNAL_MLF_RC_ENABLED COCOAPODS
 #endif
+
+//#define MEMORY_LEAKS_ALL_OBJECT_FINDER_ENABLED   //是否开启所有属性的检查
+

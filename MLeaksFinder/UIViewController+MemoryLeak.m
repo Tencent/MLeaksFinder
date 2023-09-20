@@ -68,9 +68,13 @@ const void *const kHasBeenPoppedKey = &kHasBeenPoppedKey;
         [self willReleaseChild:self.view];
     }
     
+#ifdef MEMORY_LEAKS_ALL_OBJECT_FINDER_ENABLED
+    [self willReleaseIvarList];
+#endif
+    
     return YES;
 }
 
 @end
-
 #endif
+

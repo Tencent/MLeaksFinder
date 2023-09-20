@@ -24,6 +24,10 @@ static const void *const kViewStackKey = &kViewStackKey;
 static const void *const kParentPtrsKey = &kParentPtrsKey;
 const void *const kLatestSenderKey = &kLatestSenderKey;
 
+#ifdef MEMORY_LEAKS_ALL_OBJECT_FINDER_ENABLED
+static const void *const kCheckKey = &kCheckKey;
+#endif
+
 @implementation NSObject (MemoryLeak)
 
 - (BOOL)willDealloc {
@@ -169,5 +173,105 @@ const void *const kLatestSenderKey = &kLatestSenderKey;
     }
 #endif
 }
+
+
+#ifdef MEMORY_LEAKS_ALL_OBJECT_FINDER_ENABLED
+- (BOOL)leakChecked
+{
+    NSNumber *leak = objc_getAssociatedObject(self, kCheckKey);
+    return [leak boolValue];
+}
+
+- (void)setLeakChecked:(BOOL)leakChecked
+{
+    objc_setAssociatedObject(self, kCheckKey, @(leakChecked),OBJC_ASSOCIATION_RETAIN);
+}
+
+- (BOOL)continueCheckObjecClass:(Class)objectClass
+{
+    if(!objectClass)
+    {
+        return NO;
+    }
+    
+    NSBundle *bundle = [NSBundle bundleForClass:objectClass];
+    if(bundle != [NSBundle mainBundle])
+    {
+        return NO;
+    }
+    
+    return YES;
+    
+}
+
+- (void)willReleaseIvarLisWithTargetObjectClass:(id)targetObjectClass
+{
+    if(!targetObjectClass)
+    {
+        return;
+    }
+    NSArray *viewStack = [self viewStack];
+    NSSet *parentPtrs = [self parentPtrs];
+    
+    unsigned int outCount = 0;
+    Ivar * ivars = class_copyIvarList(targetObjectClass, &outCount);
+    NSString *stringType = nil;
+    for (unsigned int i = 0; i < outCount; i ++) {
+        Ivar ivar = ivars[i];
+        const char * name = ivar_getName(ivar);
+        const char * type = ivar_getTypeEncoding(ivar);
+        stringType = [NSString stringWithCString:type encoding:NSUTF8StringEncoding];
+        //非NSObject类型不用继续遍历
+        if ((!name) || ![stringType hasPrefix:@"@"] || [stringType isEqualToString:@"@"]) {
+            
+            continue;
+        }
+        
+        id value = nil;
+        
+        @try {
+            value =  [self valueForKey:[NSString stringWithUTF8String:name]];
+        } @catch (NSException *exception) {
+            NSLog(@"class %@ valueForKey:%s throw NSException,",NSStringFromClass([targetObjectClass class]),name);
+        }
+        
+        if(![value continueCheckObjecClass:[value class]])
+        {
+            continue;
+        }
+        
+        NSString *className = NSStringFromClass([value class]);
+        [value setViewStack:[viewStack arrayByAddingObject:className]];
+        [value setParentPtrs:[parentPtrs setByAddingObject:@((uintptr_t)value)]];
+        [value willDealloc];
+        [value willReleaseIvarList];
+        
+    }
+    free(ivars);
+}
+
+- (void)willReleaseIvarList
+{
+    if([self leakChecked])
+    {
+        return;
+    }
+    [self setLeakChecked:YES];
+    
+    if(![self continueCheckObjecClass:[self class]])
+    {
+        return;
+    }
+    [self willReleaseIvarLisWithTargetObjectClass:[self class]];
+    
+    if(![self continueCheckObjecClass:[self superclass]])
+    {
+        return;
+    }
+    [self willReleaseIvarLisWithTargetObjectClass:[self superclass]];
+    
+}
+
+#endif
 
 @end

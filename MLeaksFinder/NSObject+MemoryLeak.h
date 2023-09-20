@@ -28,4 +28,9 @@
 
 + (void)swizzleSEL:(SEL)originalSEL withSEL:(SEL)swizzledSEL;
 
+#ifdef MEMORY_LEAKS_ALL_OBJECT_FINDER_ENABLED
+- (void)willReleaseIvarList;
+- (BOOL)continueCheckObjecClass:(Class)objectClass;
+#endif
+
 @end

@@ -12,7 +12,11 @@
 
 #import "MLeaksMessenger.h"
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 90000
 static __weak UIAlertView *alertView;
+#else
+static __weak UIAlertView *alertView;
+#endif
 
 @implementation MLeaksMessenger
 
@@ -25,13 +29,27 @@ static __weak UIAlertView *alertView;
               delegate:(id<UIAlertViewDelegate>)delegate
  additionalButtonTitle:(NSString *)additionalButtonTitle {
     [alertView dismissWithClickedButtonIndex:0 animated:NO];
-    UIAlertView *alertViewTemp = [[UIAlertView alloc] initWithTitle:title
-                                                            message:message
-                                                           delegate:delegate
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:additionalButtonTitle, nil];
-    [alertViewTemp show];
-    alertView = alertViewTemp;
+    if (@available(iOS 9, *)) {
+        UIAlertController * alertViewTemp = [UIAlertController
+                                             alertControllerWithTitle:title
+                                             message:message
+                                             preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+            //do something when click button
+        }];
+        [alertViewTemp addAction:okAction];
+        [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:alertViewTemp animated:YES completion:nil];
+    }
+    else{
+        UIAlertView *alertViewTemp = [[UIAlertView alloc] initWithTitle:title
+                                                                message:message
+                                                               delegate:delegate
+                                                      cancelButtonTitle:@"OK"
+                                                      otherButtonTitles:additionalButtonTitle, nil];
+        [alertViewTemp show];
+        alertView = alertViewTemp;
+    }
     
     NSLog(@"%@: %@", title, message);
 }

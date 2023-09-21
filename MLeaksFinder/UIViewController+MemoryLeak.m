@@ -53,7 +53,12 @@ const void *const kHasBeenPoppedKey = &kHasBeenPoppedKey;
     
     if (!dismissedViewController) return;
     
-    [dismissedViewController willDealloc];
+    // present出来的VC, dismiss的时候, 系统会多持有几秒? 为了避免频繁的误报, 给他多一点时间dealloc
+    __weak id weakVC = dismissedViewController;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        __strong id strongVC = weakVC;
+        [strongVC willDealloc];
+    });
 }
 
 - (BOOL)willDealloc {
